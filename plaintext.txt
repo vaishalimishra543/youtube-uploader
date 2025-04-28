@@ -1,0 +1,13 @@
+youtube_uploader/
+│
+├── app/
+│   ├── __init__.py
+│   ├── routes.py
+│   ├── templates/
+│   │   └── index.html
+│   └── downloads/ (this folder is generated during downloads)
+│
+├── app.py
+├── requirements.txt
+├── render.yaml (optional)
+└── README.md
