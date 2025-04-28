@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Downloader</title>
+</head>
+<body>
+    <h1>YouTube Video Downloader</h1>
+    <form action="/fetch_formats" method="POST">
+        <input type="text" name="youtube_url" placeholder="Paste YouTube URL" required>
+        <button type="submit">Get Available Formats</button>
+    </form>
+    {% if formats %}
+        <h2>Available Formats:</h2>
+        <ul>
+        {% for format in formats %}
+            <li>
+                {{ format.format_note }} - {{ format.ext }} 
+                {% if format.filesize %}
+                    ({{ format.filesize|filesizeformat }})
+                {% endif %}
+                <form action="/download_selected" method="POST">
+                    <input type="hidden" name="youtube_url" value="{{ youtube_url }}">
+                    <input type="hidden" name="format_id" value="{{ format.format_id }}">
+                    <button type="submit">Download</button>
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
