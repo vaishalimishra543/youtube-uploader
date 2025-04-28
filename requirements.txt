@@ -1,0 +1,4 @@
+Flask
+yt-dlp
+PyDrive2
+gunicorn
