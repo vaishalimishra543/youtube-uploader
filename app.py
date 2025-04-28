@@ -4,6 +4,9 @@ import os
 
 app = Flask(__name__)
 
+# Set the path to the cookies file (change this to where you store your cookies file)
+COOKIES_FILE_PATH = 'path_to_your_cookies_file.json'
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html', formats=None)
@@ -11,7 +14,10 @@ def index():
 @app.route('/fetch_formats', methods=['POST'])
 def fetch_formats():
     youtube_url = request.form['youtube_url']
-    ydl_opts = {'quiet': True}
+    ydl_opts = {
+        'quiet': True,
+        'cookies': COOKIES_FILE_PATH  # Pass the cookies to yt-dlp
+    }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(youtube_url, download=False)
         formats = [
@@ -29,12 +35,15 @@ def fetch_formats():
 def download_selected():
     youtube_url = request.form['youtube_url']
     format_id = request.form['format_id']
-    ydl_opts = {'format': format_id, 'outtmpl': 'downloads/%(title)s.%(ext)s'}
+    ydl_opts = {
+        'format': format_id,
+        'outtmpl': 'downloads/%(title)s.%(ext)s',
+        'cookies': COOKIES_FILE_PATH  # Pass the cookies to yt-dlp
+    }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(youtube_url, download=True)
         file_title = ydl.prepare_filename(info)
 
-    # Now only returning the download success message without uploading to Google Drive
     return f"✅ Downloaded {os.path.basename(file_title)} successfully!"
 
 if __name__ == "__main__":
