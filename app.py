@@ -1,15 +1,8 @@
 from flask import Flask, render_template, request
 import yt_dlp
 import os
-from pydrive2.auth import GoogleAuth
-from pydrive2.drive import GoogleDrive
 
 app = Flask(__name__)
-
-# Setup Google Drive authentication
-gauth = GoogleAuth()
-gauth.LocalWebserverAuth()
-drive = GoogleDrive(gauth)
 
 @app.route('/', methods=['GET'])
 def index():
@@ -41,12 +34,8 @@ def download_selected():
         info = ydl.extract_info(youtube_url, download=True)
         file_title = ydl.prepare_filename(info)
 
-    # Upload to Google Drive
-    file = drive.CreateFile({'title': os.path.basename(file_title)})
-    file.SetContentFile(file_title)
-    file.Upload()
-
-    return f"✅ Uploaded {os.path.basename(file_title)} to your Google Drive!"
+    # Now only returning the download success message without uploading to Google Drive
+    return f"✅ Downloaded {os.path.basename(file_title)} successfully!"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
